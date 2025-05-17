@@ -23,3 +23,5 @@ for angle in range(0, 180, 10):
 for angle in range(180, 0, -10):
     set_servo_angle(0, angle)
     time.sleep(0.05)
+
+#test ob der git push funktioniert :)
