@@ -26,3 +26,5 @@ for angle in range(180, 0, -10):
 
 def nutzlose_function():
     pass
+
+print("Hello")
