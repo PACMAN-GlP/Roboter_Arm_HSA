@@ -15,7 +15,7 @@ def set_servo_angle(channel, angle):
     pulse = int(min_pulse + (angle / 180.0) * (max_pulse - min_pulse))
     pca.channels[channel].duty_cycle = int((pulse / 4096.0) * 0xFFFF)
 
-# Servo an Kanal 0 schwenken
+# Servo an Kanal 0 schlenken :D
 for angle in range(0, 180, 10):
     set_servo_angle(0, angle)
     time.sleep(0.05)
@@ -24,4 +24,5 @@ for angle in range(180, 0, -10):
     set_servo_angle(0, angle)
     time.sleep(0.05)
 
-#test ob der git push funktioniert :)
+def nutzlose_function():
+    pass
