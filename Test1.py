@@ -1,30 +1,29 @@
+from __future__ import division
 import time
-from adafruit_pca9685 import PCA9685
-from board import SCL, SDA
-import busio
+import Adafruit_PCA9685
 
-# I2C-Verbindung aufbauen
-i2c = busio.I2C(SCL, SDA)
-pca = PCA9685(i2c)
-pca.frequency = 50  # 50 Hz für Servos
+pwm = Adafruit_PCA9685.PCA9685(busnum=1)
 
-# Hilfsfunktion: Winkel zu Pulsbreite (zwischen 0 und 0xFFFF)
-def set_servo_angle(channel, angle):
-    min_pulse = 150  # Minimaler Puls (kann je nach Servo leicht variieren)
-    max_pulse = 600  # Maximaler Puls
-    pulse = int(min_pulse + (angle / 180.0) * (max_pulse - min_pulse))
-    pca.channels[channel].duty_cycle = int((pulse / 4096.0) * 0xFFFF)
+servo_limits = {
+    0: (100, 510),  # DM996 15kg
+    1: (100, 510),  # DM996
+    2: (205, 410),  # DM996
+    3: (150, 600),  # DS3225 25kg
+    4: (120, 500),  # 9g Microservo
+}
 
-# Servo an Kanal 0 schlenken :D
-for angle in range(0, 180, 10):
-    set_servo_angle(0, angle)
-    time.sleep(0.05)
+# Frequency of the servos
+pwm.set_pwm_freq(44)
 
-for angle in range(180, 0, -10):
-    set_servo_angle(0, angle)
-    time.sleep(0.05)
+print('Moving servos (Testbetrieb)...')
 
-def nutzlose_function():
-    pass
-
-print("Hello")
+while True:
+    # Move servo on channel O between extremes.
+    pwm.set_pwm(0, 0, servo_limits[0][0])
+    pwm.set_pwm(1, 0, servo_limits[0][0])
+    pwm.set_pwm(2, 0, servo_limits[1][0])
+    time.sleep(1)
+    pwm.set_pwm(0, 0, servo_limits[0][1])
+    pwm.set_pwm(1, 0, servo_limits[0][1])
+    pwm.set_pwm(2, 0, servo_limits[1][1])
+    time.sleep(1)
