@@ -2,9 +2,6 @@ from __future__ import division
 import time
 import Adafruit_PCA9685
 
-from Test1 import servo_limits
-
-
 class Servo:
     pwm = Adafruit_PCA9685.PCA9685(busnum=1)
 
@@ -28,7 +25,7 @@ class Servo:
 
     def move(self, angle:float):
         self.servo_angle = angle
-        self.pwm.set_pwm(self.servo_id, 0, self.servo_min + (self.servo_max - self.servo_min) * self.servo_angle / 180)
+        self.pwm.set_pwm(self.servo_id, 0, int(self.servo_min + (self.servo_max - self.servo_min) * self.servo_angle / 180))
 
     def get_angle(self):
         return self.servo_angle

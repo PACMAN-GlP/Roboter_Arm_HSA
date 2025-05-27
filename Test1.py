@@ -1,24 +1,12 @@
-from __future__ import division
 import time
-import Adafruit_PCA9685
+from Servo import Servo
 
-pwm = Adafruit_PCA9685.PCA9685(busnum=1)
-
-servo_limits = {
-    0: (100, 510),  # DM996 15kg
-    1: (100, 510),  # DM996
-    2: (100, 510),  # DM996
-    3: (100, 510),  # DS3225 25kg
-    4: (100, 510),  # 9g Microservo
-}
-
-# Frequency of the servos
-pwm.set_pwm_freq(44)
-
-print('Moving servos (Testbetrieb)...')
+servo0 = Servo(0, 90)
 
 while True:
-    for j in range(2):
-        for i in range(5):
-            pwm.set_pwm(i, 0, servo_limits[i][j])
-        time.sleep(1)
+    servo0.move(0)
+    time.sleep(1)
+    servo0.move(90)
+    time.sleep(1)
+    servo0.move(180)
+    time.sleep(1)
