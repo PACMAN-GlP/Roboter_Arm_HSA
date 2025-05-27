@@ -21,7 +21,7 @@ class Servo:
         self.servo_id = servo_id
         self.servo_angle = servo_angle
         self.servo_min = 100 #servo_limits[servo_id][0]
-        self.servo_max = 510 #servo_limits[servo_id][1]
+        self.servo_max = 500 #servo_limits[servo_id][1]
 
     def move(self, angle:float):
         self.servo_angle = angle
