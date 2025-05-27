@@ -1,6 +1,5 @@
-from __future__ import division
-import time
-import Adafruit_PCA9685
+from __future__ import division #improved compatibility between python 2 and 3
+import Adafruit_PCA9685 #servo driver board "firmware". main functions: set_pwm_freq and set_pwm
 
 class Servo:
     pwm = Adafruit_PCA9685.PCA9685(busnum=1)
@@ -15,17 +14,19 @@ class Servo:
     }
     """
 
-    pwm.set_pwm_freq(44)
+    pwm.set_pwm_freq(44) #corrected measured frequency value; ~50 Hz → T=20 ms
 
-    def __init__(self, servo_id:int, servo_angle:float):
+    def __init__(self, servo_id:int, servo_angle:int):
         self.servo_id = servo_id
-        self.servo_angle = servo_angle
-        self.servo_min = 100 #servo_limits[servo_id][0]
-        self.servo_max = 500 #servo_limits[servo_id][1]
+        self.servo_angle = servo_angle #initial angle
+        self.servo_min = 100 #servo_limits[servo_id][0] #corrected measured pulse value; 0,5 ms
+        self.servo_max = 500 #servo_limits[servo_id][1] #corrected measured pulse value; 2,5 ms
 
-    def move(self, angle:float):
-        self.servo_angle = angle
-        self.pwm.set_pwm(self.servo_id, 0, int(self.servo_min + (self.servo_max - self.servo_min) * self.servo_angle / 180))
+    def move(self, angle:float): #main move function for servo. use to move servo to specific angle
+        angle = int(self.servo_min + (self.servo_max - self.servo_min) * angle / 180)
+        if self.servo_max+1 > angle > self.servo_min-1:
+            self.servo_angle = angle
+        self.pwm.set_pwm(self.servo_id, 0, self.servo_angle)
 
     def get_angle(self):
         return self.servo_angle
