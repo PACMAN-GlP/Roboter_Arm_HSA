@@ -47,7 +47,7 @@ def pos4():
     servo4.set_angle(0)
     time.sleep(0.5)
 
-while True:
+def demo():
     auto_home()
     time.sleep(1)
     for i in range(3):
@@ -58,3 +58,6 @@ while True:
         pos4()
         pos3()
     time.sleep(2)
+
+while True:
+    demo()
