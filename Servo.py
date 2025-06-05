@@ -5,9 +5,9 @@ class Servo:
     pwm = Adafruit_PCA9685.PCA9685(busnum=1)
 
     servo_limits = {
-        0: (150, 390),  # DM996 15kg
+        0: (100, 510),  # DM996 15kg
         1: (85, 450),  # DS3225 25kg
-        2: (100, 466),  # DM996 15kg 0°-165°
+        2: (100, 520),  # DM996 15kg 0°-165°
         3: (100, 510),  # DM996 15kg
         4: (200, 300),  # 9g Microservo
     }

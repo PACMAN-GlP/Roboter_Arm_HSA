@@ -1,15 +1,19 @@
 import paramiko
-import tkinter as tk
-from tkinter import ttk
+import ttkbootstrap as tb
+from ttkbootstrap.constants import *
+from PIL import Image, ImageTk
+
 
 # SSH-Zugangsdaten
-PI_HOST = "10.42.0.204"
+PI_HOST = "192.168.188.21"
 PI_USER = "pi"
 PI_PASSWORD = "pi"
 PI_COMMAND = "/home/pi/Test1.py"
 
-# Initiale Winkelwerte
-angles = [0, 90, 90, 0, 0]
+# Initiale Winkel
+angles = [90, 0, 180, 90, 0]
+MAX_VALUES = [180, 180, 180, 180, 180]
+HOMING = [90, 0, 180, 90, 0]
 
 # SSH-Verbindung aufbauen
 ssh = paramiko.SSHClient()
@@ -17,59 +21,104 @@ ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 ssh.connect(PI_HOST, username=PI_USER, password=PI_PASSWORD)
 print("SSH-Verbindung aufgebaut")
 
+
 # Sendet aktuelle Winkelwerte per SSH
 def send_angles():
     command = f"python3 {PI_COMMAND} " + " ".join(map(str, angles))
     try:
-        stdin, stdout, stderr = ssh.exec_command(command) #Führt Test1.py aus und übergibt die Werte
+        stdin, stdout, stderr = ssh.exec_command(command)
         output = stdout.read().decode().strip()
         error = stderr.read().decode().strip()
 
         print(f"→→ PI: {output}")
-
         if error:
             status_label.config(text=f"Fehler: {error}", foreground="red")
-            print(f"ERROR: {error}")
         else:
             status_label.config(text=f"Gesendet: {angles}", foreground="green")
     except Exception as e:
         status_label.config(text=f"SSH-Fehler: {e}", foreground="red")
 
-# Wird bei Änderung eines Sliders aufgerufen
-def update_angle(index, val):
-    angles[index] = int(float(val))
 
-# Wiederholt das Senden alle 100ms
+# Winkel aktualisieren
+def update_angle(index, val):
+    angle = int(float(val))
+    angles[index] = angle
+    angle_labels[index].config(text=f"{angle}°")
+
+
+# Sende-Befehl alle 100ms
 def loop_send():
     send_angles()
     root.after(100, loop_send)
 
-# GUI erstellen
-root = tk.Tk()
-root.title("Live Steuerung")
-root.geometry("400x400")
+
+# Homing-Position
+def set_homing():
+    for i, val in enumerate(HOMING):
+        sliders[i].set(val)
+
+
+# GUI mit ttkbootstrap
+root = tb.Window(themename="flatly")
+root.title("Live Robotersteuerung")
+root.geometry("500x550")
+root.resizable(False, False)
+
+frame = tb.Frame(root, padding=20)
+
+# Logo einfügen
+logo_path = "robo_bild.png"  # Datei im gleichen Verzeichnis
+try:
+    img = Image.open(logo_path)
+    img = img.resize((120, 120))
+    logo = ImageTk.PhotoImage(img)
+
+    logo_label = tb.Label(frame, image=logo)
+    logo_label.image = logo  # Referenz halten!
+    logo_label.pack(pady=10)
+except Exception as e:
+    print(f"Logo konnte nicht geladen werden: {e}")
+
+frame.pack(fill=BOTH, expand=True)
 
 sliders = []
+angle_labels = []
+
 for i in range(5):
-    tk.Label(root, text=f"Achse {i + 1}").pack()
-    max_val = 180
-    slider = ttk.Scale(root, from_=0, to=max_val, orient="horizontal",
-                       command=lambda val, idx=i: update_angle(idx, val))
+    row = tb.Frame(frame)
+    row.pack(fill=X, pady=10)
+
+    tb.Label(row, text=f"Achse {i + 1}", width=10).pack(side=LEFT)
+    slider = tb.Scale(row, from_=0, to=MAX_VALUES[i], orient=HORIZONTAL,
+                      command=lambda val, idx=i: update_angle(idx, val),
+                      bootstyle="info")
     slider.set(angles[i])
-    slider.pack(fill="x", padx=20, pady=5)
+    slider.pack(side=LEFT, fill=X, expand=True, padx=10)
+
+    angle_lbl = tb.Label(row, text=f"{angles[i]}°", width=5)
+    angle_lbl.pack(side=LEFT)
+
     sliders.append(slider)
+    angle_labels.append(angle_lbl)
 
-status_label = tk.Label(root, text="Bereit", foreground="gray")
-status_label.pack(pady=20)
+# Homing Button
+tb.Button(frame, text="Homing Position", command=set_homing, bootstyle="primary").pack(pady=15)
 
-# Starte Loop
-root.after(100, loop_send)
+# Statusanzeige
+status_label = tb.Label(frame, text="Bereit", font=("Segoe UI", 10), foreground="gray")
+status_label.pack(pady=10)
 
-# SSH beim Schließen beenden
+
+# Fenster schließen = SSH beenden
 def on_close():
     print("Verbindung wird beendet...")
-    ssh.close()
+    try:
+        ssh.close()
+    except:
+        pass
     root.destroy()
 
+
 root.protocol("WM_DELETE_WINDOW", on_close)
+root.after(100, loop_send)
 root.mainloop()
