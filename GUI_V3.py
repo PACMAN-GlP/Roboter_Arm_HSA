@@ -3,7 +3,6 @@ import ttkbootstrap as tb
 from ttkbootstrap.constants import *
 from PIL import Image, ImageTk
 
-
 # SSH-Zugangsdaten
 PI_HOST = "192.168.188.21"
 PI_USER = "pi"
