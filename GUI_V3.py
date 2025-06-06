@@ -7,7 +7,7 @@ from PIL import Image, ImageTk
 PI_HOST = "10.42.0.204" #10.42.0.204 - 192.168.188.21
 PI_USER = "pi"
 PI_PASSWORD = "pi"
-PI_COMMAND = "/home/pi/main.py"
+PI_COMMAND = "/home/pi/Main.py"
 
 # Initiale Winkel
 angles = [90, 0, 180, 90, 0]
