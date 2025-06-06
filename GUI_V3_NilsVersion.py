@@ -8,7 +8,7 @@ from PIL import Image, ImageTk
 PI_HOST = "raspberrypi.local"
 PI_USER = "nils"
 PI_PASSWORD = "1234"
-PI_COMMAND = "/home/nils/Test1.py"
+PI_COMMAND = "/home/nils/main.py"
 
 # Initiale Winkel
 angles = [90, 0, 180, 90, 0]
