@@ -3,11 +3,12 @@ import ttkbootstrap as tb
 from ttkbootstrap.constants import *
 from PIL import Image, ImageTk
 
+
 # SSH-Zugangsdaten
-PI_HOST = "10.42.0.204" #10.42.0.204 - 192.168.188.21
-PI_USER = "pi"
-PI_PASSWORD = "pi"
-PI_COMMAND = "/home/pi/Main.py"
+PI_HOST = "f"
+PI_USER = "nils"
+PI_PASSWORD = "1234"
+PI_COMMAND = "/home/nils/Main.py"
 
 # Initiale Winkel
 angles = [90, 0, 180, 90, 0]
