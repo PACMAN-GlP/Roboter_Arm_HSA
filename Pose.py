@@ -1,5 +1,4 @@
 import math
-from Servo import Servo
 class Pose:
     S1=90 #Length of arm a1 to a2
     S2=90 #Length of arm a2 to a3
@@ -14,7 +13,9 @@ class Pose:
         if math.sqrt(self.x**2+self.y**2+self.z**2) > (Pose.S1+Pose.S2): #Check if distance to target exceeds maximum reach of S1+S2
             raise ValueError(f"Target position is unreachable. make sure the distance does not exceed {Pose.S1+Pose.S2}mm.")
 
-        l=math.sqrt(self.x**2+self.y**2+self.z**2) #Distance to target point
+        l=math.sqrt(self.x**2+self.y**2+self.z**2)
+        if l==0:
+            l=0.00001
         a12=math.degrees(math.atan2(self.z, math.sqrt(self.x**2+self.y**2)))
 
         if self.x==0 and self.y==0:
@@ -26,12 +27,13 @@ class Pose:
 
         return [self.a0, self.a1, self.a2, self.a3, self.a4]
 
-    def change_Pose(self, x:int, y:int, z:int, r:int, e:bool):
+    def change_Pose(self, x, y, z, r, e:bool):
         self.x = x
         self.y = y
         self.z = z
         self.r = r
         self.e = e
+        self.get_axis_values()
 
     def reset_Pose_to_auto_home(self):
         self.a0=90
@@ -40,17 +42,8 @@ class Pose:
         self.a3=90
         self.a4=0
 
-    def move_Servos_To_Pose(self):
-        servo0 = Servo(0)
-        servo1 = Servo(1)
-        servo2 = Servo(2)
-        servo3 = Servo(3)
-        servo4 = Servo(4)
-        servo0.set_angle(self.a0)
-        servo1.set_angle(self.a1)
-        servo2.set_angle(self.a2)
-        servo3.set_angle(self.a3)
-        servo4.set_angle(self.a4)
-
-    def toString(self):
+    def axisToString(self):
         return f"{self.a0}, {self.a1}, {self.a2}, {self.a3}, {self.a4}"
+
+    def posToString(self):
+        return f"{self.x}, {self.y}, {self.z}"

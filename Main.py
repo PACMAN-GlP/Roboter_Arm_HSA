@@ -1,4 +1,5 @@
 import sys
+from Pose import Pose
 from Servo import Servo
 
 servo0 = Servo(0)
