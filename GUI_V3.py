@@ -5,10 +5,10 @@ from PIL import Image, ImageTk
 
 
 # SSH-Zugangsdaten
-PI_HOST = "f"
-PI_USER = "nils"
-PI_PASSWORD = "1234"
-PI_COMMAND = "/home/nils/Main.py"
+PI_HOST = "pi.local"
+PI_USER = "pi"
+PI_PASSWORD = "pi"
+PI_COMMAND = "/home/pi/Main.py"
 
 # Initiale Winkel
 angles = [90, 0, 180, 90, 0]
