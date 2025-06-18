@@ -9,3 +9,5 @@ adding files to push to github repository(preparing the upload): →git add {/pa
 commit files to github repository with comment: →git commit -m "{push description}"
 
 push files to github repository: →git push
+
+quick upload all files to raspberrypi: →bash upload.sh
