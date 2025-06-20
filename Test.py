@@ -12,4 +12,4 @@ for i in range(3):
 
 Pose1.reset_Pose_to_auto_home()
 Kin.move_p2p(Pose1)
-print(Pose1.axisToString())
+print(Pose1)

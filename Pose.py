@@ -42,8 +42,38 @@ class Pose:
         self.a3=90
         self.a4=0
 
-    def axisToString(self):
-        return f"{self.a0}, {self.a1}, {self.a2}, {self.a3}, {self.a4}"
+    def __add__(self, other):
+        return Pose(self.x + other.x, self.y + other.y, self.z + other.z, self.r, self.e)
 
-    def posToString(self):
-        return f"{self.x}, {self.y}, {self.z}"
+    def __radd__(self, other):
+        return self.__add__(other)
+
+    def __iadd__(self, other):  # für +=
+        self.change_Pose(self.x + other.x, self.y + other.y, self.z + other.z, self.r, self.e)
+        return self
+
+    def __sub__(self, other):
+        return Pose(self.x - other.x, self.y - other.y, self.z - other.z, self.r, self.e)
+
+    def __mul__(self, other):
+        if isinstance(other, Pose):
+            return self.x * other.x + self.y * other.y + self.z * other.z
+        else:
+            return Pose(self.x * other, self.y * other, self.z * other, self.r, self.e)
+
+    def __rmul__(self, other):  # skalar * Pose
+        return self.__mul__(other)
+
+    def __imul__(self, other):  # für *=
+        self.change_Pose(self.x * other, self.y * other, self.z * other, self.r, self.e)
+        return self
+
+    def __truediv__(self, other):  # Pose / skalar
+        return Pose(self.x / other, self.y / other, self.z / other, self.r, self.e)
+
+    def __itruediv__(self, other):  # Pose /= skalar
+        self.change_Pose(self.x / other, self.y / other, self.z / other, self.r, self.e)
+        return self
+
+    def __str__(self):
+        return f"{self.x}, {self.y}, {self.z} | {self.a0}, {self.a1}, {self.a2}, {self.a3}, {self.a4}"

@@ -39,7 +39,7 @@ class Kinematics:
             pose.get_axis_values()
             self.Pose0 = pose
             self.move_p2p(pose)
-            print(pose.posToString())
+            print(pose)
             time.sleep(0.05)
 
         print("finished!")
