@@ -129,6 +129,12 @@ def on_close():
         pass
     root.destroy()
 
+def clear_positions():
+    saved_positions.clear()  # Liste leeren
+    listbox.delete(0, END)   # Listbox leeren
+    status_label.config(text="Alle Positionen gelöscht", foreground="orange")
+
+
 # GUI
 root = tb.Window(themename="flatly")
 root.title("Robotersteuerung")
@@ -165,7 +171,7 @@ for i in range(5):
     tb.Label(row, text=f"Achse {i+1}", width=10).pack(side=LEFT)
     slider = tb.Scale(row, from_=0, to=MAX_VALUES[i], orient=HORIZONTAL,
                       command=lambda val, idx=i: update_angle(idx, val),
-                      bootstyle="info", length=350)
+                      bootstyle="info", length=250)
     slider.set(angles[i])
     slider.pack(side=LEFT, padx=10, fill=X, expand=True)
 
@@ -175,6 +181,16 @@ for i in range(5):
     sliders.append(slider)
     angle_labels.append(label)
 
+    # Zusätzliche Buttons nur für Achse 5 (Index 4)
+    if i == 4:
+        btn_frame_5 = tb.Frame(row)
+        btn_frame_5.pack(side=LEFT, padx=5)
+
+        tb.Button(btn_frame_5, text="Auf", width=5, bootstyle="success",
+                  command=lambda: sliders[4].set(180)).pack(side=TOP, pady=2)
+        tb.Button(btn_frame_5, text="Zu", width=5, bootstyle="danger",
+                  command=lambda: sliders[4].set(0)).pack(side=TOP, pady=2)
+        
 # XYZ-Tab
 tab_xyz = tb.Frame(notebook)
 notebook.add(tab_xyz, text="XYZ + Rotation1")
@@ -220,6 +236,9 @@ tb.Button(btn_frame, text="Homing Position", command=set_homing, bootstyle="prim
 tb.Button(btn_frame, text="Speichern", command=save_position, bootstyle="success").pack(side=LEFT, padx=5)
 tb.Button(btn_frame, text="Start", command=start_playback, bootstyle="success").pack(side=LEFT, padx=5)
 tb.Button(btn_frame, text="Stop", command=stop_playback, bootstyle="danger").pack(side=LEFT, padx=5)
+tb.Button(frame, text="Alle Positionen löschen", bootstyle="danger", command=lambda: clear_positions()).pack(pady=5)
+
+
 
 listbox = tk.Listbox(frame, height=8)
 listbox.pack(fill=X, padx=20, pady=10)
