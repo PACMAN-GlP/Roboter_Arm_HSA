@@ -8,12 +8,14 @@ from PIL import Image, ImageTk
 PI_HOST = "raspberrypi.local"
 PI_USER = "nils"
 PI_PASSWORD = "1234"
-PI_COMMAND = "/home/nils/Main.py"
+PI_COMMAND = "/home/nils/Test1.py"
 
 # Initiale Winkel
 angles = [90, 0, 180, 90, 0]
 MAX_VALUES = [180, 180, 180, 180, 180]
 HOMING = [90, 0, 180, 90, 0]
+
+
 
 # SSH-Verbindung aufbauen
 ssh = paramiko.SSHClient()
@@ -89,17 +91,44 @@ for i in range(5):
     row.pack(fill=X, pady=10)
 
     tb.Label(row, text=f"Achse {i + 1}", width=10).pack(side=LEFT)
-    slider = tb.Scale(row, from_=0, to=MAX_VALUES[i], orient=HORIZONTAL,
-                      command=lambda val, idx=i: update_angle(idx, val),
-                      bootstyle="info")
-    slider.set(angles[i])
-    slider.pack(side=LEFT, fill=X, expand=True, padx=10)
 
-    angle_lbl = tb.Label(row, text=f"{angles[i]}°", width=5)
-    angle_lbl.pack(side=LEFT)
+    if i == 4:
+        # Für Achse 5: zwei Buttons statt Slider
+        def set_auf(idx=i):
+            angles[idx] = 180
+            angle_labels[idx].config(text="180°")
+            sliders[idx].config(text="180°")  # optional, falls Slider da ist
+        def set_zu(idx=i):
+            angles[idx] = 0
+            angle_labels[idx].config(text="0°")
 
-    sliders.append(slider)
-    angle_labels.append(angle_lbl)
+        btn_auf = tb.Button(row, text="Auf", command=set_auf, bootstyle="success")
+        btn_auf.pack(side=LEFT, padx=5)
+
+        btn_zu = tb.Button(row, text="Zu", command=set_zu, bootstyle="danger")
+        btn_zu.pack(side=LEFT, padx=5)
+
+        # Platzhalter für angle_labels (Anzeige des Winkels)
+        angle_lbl = tb.Label(row, text=f"{angles[i]}°", width=5)
+        angle_lbl.pack(side=LEFT)
+        angle_labels.append(angle_lbl)
+
+        # Da kein Slider für Achse 5, einfach None speichern
+        sliders.append(None)
+
+    else:
+        slider = tb.Scale(row, from_=0, to=MAX_VALUES[i], orient=HORIZONTAL,
+                          command=lambda val, idx=i: update_angle(idx, val),
+                          bootstyle="info")
+        slider.set(angles[i])
+        slider.pack(side=LEFT, fill=X, expand=True, padx=10)
+
+        angle_lbl = tb.Label(row, text=f"{angles[i]}°", width=5)
+        angle_lbl.pack(side=LEFT)
+
+        sliders.append(slider)
+        angle_labels.append(angle_lbl)
+
 
 # Homing Button
 tb.Button(frame, text="Homing Position", command=set_homing, bootstyle="primary").pack(pady=15)
