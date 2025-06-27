@@ -17,10 +17,50 @@ HOMING = [90, 0, 180, 90, 0]
 xyz_values = [0.0, 0.0, 0.0]
 rotation1 = 90
 
+# Zirkuläre verkettete Liste zur Speicherung von Positionen
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+class CircularLinkedList:
+    def __init__(self):
+        self.head = None
+        self.tail = None
+        self.current = None
+
+    def append(self, data):
+        new_node = Node(data)
+        if not self.head:
+            self.head = self.tail = new_node
+            self.tail.next = self.head
+        else:
+            self.tail.next = new_node
+            self.tail = new_node
+            self.tail.next = self.head
+
+    def reset(self):
+        self.current = self.head
+
+    def next(self):
+        if not self.current:
+            self.reset()
+        data = self.current.data
+        self.current = self.current.next
+        return data
+
+    def clear(self):
+        self.head = self.tail = self.current = None
+
+    def is_empty(self):
+        return self.head is None
+
+
 # Positionen speichern
-saved_positions = []
+saved_positions = CircularLinkedList()
+
 playback_running = False
-playback_index = 0
+
 
 # SSH verbinden
 ssh = paramiko.SSHClient()
@@ -99,33 +139,33 @@ def save_position():
     saved_positions.append(pos)
     listbox.insert(tk.END, str(pos))
 
+
 def start_playback():
-    global playback_running, playback_index
-    if not saved_positions:
+    global playback_running
+    if saved_positions.is_empty():
         status_label.config(text="Keine Positionen gespeichert!", foreground="red")
         return
     playback_running = True
-    playback_index = 0
+    saved_positions.reset()
     run_playback()
 
+
 def run_playback():
-    global playback_index
     if not playback_running:
         return
-    pos = saved_positions[playback_index]
+    pos = saved_positions.next()
     if notebook.index(notebook.select()) == 0:
         for i in range(5):
             if i < 4:
                 sliders[i].set(pos[i])
             else:
-                # Achse 5 direkt setzen
                 set_angle_5(pos[i])
     else:
         for i in range(3):
             xyz_sliders[i].set(pos[i])
         rotation1_slider.set(pos[3])
-    playback_index = (playback_index + 1) % len(saved_positions)
     root.after(1000, run_playback)
+
 
 def stop_playback():
     global playback_running
@@ -140,9 +180,10 @@ def on_close():
     root.destroy()
 
 def clear_positions():
-    saved_positions.clear()  # Liste leeren
-    listbox.delete(0, END)   # Listbox leeren
+    saved_positions.clear()
+    listbox.delete(0, END)
     status_label.config(text="Alle Positionen gelöscht", foreground="orange")
+
 
 def set_angle_5(value):
     angles[4] = value
