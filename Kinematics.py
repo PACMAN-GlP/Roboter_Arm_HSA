@@ -21,6 +21,8 @@ class Kinematics:
             print(self.Pose0.posToString())
         print("finished!")
         """
+
+        """
         speed=30
         # Extrahiere Start- und Zielvektoren
         p0 = np.array([self.Pose0.x, self.Pose0.y, self.Pose0.z, self.Pose0.r, self.Pose0.e])
@@ -41,10 +43,12 @@ class Kinematics:
             self.move_p2p(pose)
             print(pose)
             time.sleep(0.05)
-
         print("finished!")
+        """
 
-    def move_p2p(self, pos:Pose):
+        
+
+    def move_p2p(self, pos:Pose, wait:float=1):
         print(f"{pos.a0}, {pos.a1}, {pos.a2}, {pos.a3}, {pos.a4}")
         servo0 = Servo(0)
         servo1 = Servo(1)
@@ -56,4 +60,4 @@ class Kinematics:
         servo2.set_angle(pos.a2)
         servo3.set_angle(pos.a3)
         servo4.set_angle(pos.a4)
-        time.sleep(0.05)
+        time.sleep(wait)
