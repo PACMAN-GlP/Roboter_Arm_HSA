@@ -9,7 +9,7 @@ class Servo:
         1: (85, 450),  # DS3225 25kg
         2: (145, 510),  # DM996 15kg 0°-165°
         3: (100, 510),  # DM996 15kg
-        4: (200, 300),  # 9g Microservo
+        4: (200, 280),  # 9g Microservo
     }
 
     pwm.set_pwm_freq(44) #corrected measured frequency value; ~50 Hz → T=20 ms
