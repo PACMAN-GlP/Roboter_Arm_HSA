@@ -5,10 +5,10 @@ from PIL import Image, ImageTk
 import tkinter as tk
 
 # SSH-Zugangsdaten
-PI_HOST = "raspberrypi.local"
-PI_USER = "nils"
-PI_PASSWORD = "1234"
-PI_COMMAND = "/home/nils/Test1.py"
+PI_HOST = "pi.local"
+PI_USER = "pi"
+PI_PASSWORD = "pi"
+PI_COMMAND = "/home/pi/Main.py"
 
 # Initiale Winkel und Werte
 angles = [90, 0, 180, 90, 0]
