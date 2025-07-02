@@ -1,4 +1,5 @@
 import paramiko
+from Pose import Pose
 import ttkbootstrap as tb
 from ttkbootstrap.constants import *
 from PIL import Image, ImageTk
@@ -10,6 +11,7 @@ PI_HOST = "pi.local"
 PI_USER = "pi"
 PI_PASSWORD = "pi"
 PI_COMMAND = "/home/pi/Main.py"
+PI_COMMAND_XYZ = "/home/pi/MainXYZ.py"
 
 # Initiale Winkel und Werte
 angles = [90, 0, 180, 90, 0]
@@ -36,7 +38,7 @@ def send_angles():
         stdin, stdout, stderr = ssh.exec_command(command)
         output = stdout.read().decode().strip()
         error = stderr.read().decode().strip()
-        print(f"→→ PI: {output}")
+        print(f"→→ axis-PI: {output}")
         if error:
             status_label.config(text=f"Fehler: {error}", foreground="red")
         else:
@@ -66,12 +68,12 @@ def update_rotation1(val):
 
 def send_xyz():
     # Beispiel-Kommando für XYZ + Rotation
-    command = f"python3 {PI_COMMAND} XYZ {xyz_values[0]} {xyz_values[1]} {xyz_values[2]} {rotation1}"
+    command = f"python3 {PI_COMMAND_XYZ} {xyz_values[0]} {xyz_values[1]} {xyz_values[2]} {rotation1}"
     try:
         stdin, stdout, stderr = ssh.exec_command(command)
         output = stdout.read().decode().strip()
         error = stderr.read().decode().strip()
-        print(f"→→ PI: {output}")
+        print(f"→→ xyz-PI: {output}")
         if error:
             status_label.config(text=f"Fehler: {error}", foreground="red")
         else:
@@ -261,7 +263,7 @@ for i, axis in enumerate(["X", "Y", "Z"]):
     row.pack(fill=X, pady=8)
 
     tb.Label(row, text=axis, width=10).pack(side=LEFT)
-    slider = tb.Scale(row, from_=-1, to=1, orient=HORIZONTAL,
+    slider = tb.Scale(row, from_=-(Pose.S1+Pose.S2), to=Pose.S1+Pose.S2, orient=HORIZONTAL,
                       command=lambda val, idx=i: update_xyz(idx, val),
                       bootstyle="warning", length=350)
     slider.set(xyz_values[i])
@@ -272,6 +274,18 @@ for i, axis in enumerate(["X", "Y", "Z"]):
 
     xyz_sliders.append(slider)
     xyz_labels.append(label)
+
+# Achse 5: nur Auf/Zu Buttons
+btn_frame_5 = tb.Frame(tab_xyz)
+btn_frame_5.pack(pady=10)
+
+tb.Label(btn_frame_5, text="Greifer").pack()
+
+tb.Button(btn_frame_5, text="Auf", width=10, bootstyle="success",
+          command=lambda: set_angle_5(180)).pack(side=LEFT, padx=10)
+tb.Button(btn_frame_5, text="Zu", width=10, bootstyle="danger",
+          command=lambda: set_angle_5(0)).pack(side=LEFT, padx=10)
+
 
 row_rot = tb.Frame(tab_xyz)
 row_rot.pack(fill=X, pady=8)

@@ -26,7 +26,7 @@ class Servo:
         if self.servo_min <= pulse <= self.servo_max:
             self.pwm.set_pwm(self.servo_id, 0, pulse)
             self.servo_pulse = pulse
-        print(angle)
+        #print(angle)
 
     def angle_to_pulse(self, angle):
         return int(self.servo_min + (self.servo_max - self.servo_min) * angle / 180)

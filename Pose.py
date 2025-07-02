@@ -4,7 +4,7 @@ class Pose:
     S2=90 #Length of arm a2 to a3
     S2AngleOffset=20 #Angle offset to a3 due to geometry of a2
 
-    def __init__(self, x, y, z, r, e):
+    def __init__(self, x, y, z, r, e:bool):
         self.reset_Pose_to_auto_home()
         self.change_Pose(x, y, z, r, e)
         self.get_axis_values()

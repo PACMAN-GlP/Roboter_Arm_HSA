@@ -5,9 +5,9 @@ import numpy as np
 
 class Kinematics:
     def __init__(self):
-        self.Pose0 = Pose(0, 0, 0, 0, 0)
+        self.Pose0 = Pose(0, 0, 0, 0, False)
         self.Pose0.reset_Pose_to_auto_home()
-        self.move_p2p(self.Pose0)
+        #self.move_p2p(self.Pose0)
 
     def move_lin(self, target:Pose, steps:int = 50, wait_per_step:float = 0.01):
         start = self.Pose0
@@ -22,7 +22,7 @@ class Kinematics:
         self.Pose0 = target
 
     def move_p2p(self, pos:Pose, wait:float=1):
-        print(f"{pos.a0}, {pos.a1}, {pos.a2}, {pos.a3}, {pos.a4}")
+        #print(f"{pos.a0}, {pos.a1}, {pos.a2}, {pos.a3}, {pos.a4}")
         servo0 = Servo(0)
         servo1 = Servo(1)
         servo2 = Servo(2)

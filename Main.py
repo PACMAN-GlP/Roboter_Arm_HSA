@@ -1,5 +1,4 @@
 import sys
-from Pose import Pose
 from Servo import Servo
 
 servo0 = Servo(0)
@@ -16,6 +15,6 @@ def set_servos(a0, a1, a2, a3, a4):
     servo4.set_angle(a4)
 
 angles = list(map(int, sys.argv[1:]))
-print(f"Empfangene Winkel: {angles}")
+#print(f"Empfangene Winkel: {angles}")
 
 set_servos(angles[0], angles[1], angles[2], angles[3], angles[4])
