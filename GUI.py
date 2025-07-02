@@ -3,6 +3,7 @@ import ttkbootstrap as tb
 from ttkbootstrap.constants import *
 from PIL import Image, ImageTk
 import tkinter as tk
+from CircularLinkedList import CircularLinkedList #Zirkuläre verkettete Liste zur Speicherung von Positionen und widergabe in Schleife
 
 # SSH-Zugangsdaten
 PI_HOST = "pi.local"
@@ -16,45 +17,6 @@ MAX_VALUES = [180, 180, 180, 180, 180]
 HOMING = [90, 0, 180, 90, 0]
 xyz_values = [0.0, 0.0, 0.0]
 rotation1 = 90
-
-# Zirkuläre verkettete Liste zur Speicherung von Positionen
-class Node:
-    def __init__(self, data):
-        self.data = data
-        self.next = None
-
-class CircularLinkedList:
-    def __init__(self):
-        self.head = None
-        self.tail = None
-        self.current = None
-
-    def append(self, data):
-        new_node = Node(data)
-        if not self.head:
-            self.head = self.tail = new_node
-            self.tail.next = self.head
-        else:
-            self.tail.next = new_node
-            self.tail = new_node
-            self.tail.next = self.head
-
-    def reset(self):
-        self.current = self.head
-
-    def next(self):
-        if not self.current:
-            self.reset()
-        data = self.current.data
-        self.current = self.current.next
-        return data
-
-    def clear(self):
-        self.head = self.tail = self.current = None
-
-    def is_empty(self):
-        return self.head is None
-
 
 # Positionen speichern
 saved_positions = CircularLinkedList()
